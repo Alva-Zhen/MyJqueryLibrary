@@ -9,7 +9,6 @@ $(function() {
 		this.hour = date.getHours();
 		this.minute = date.getMinutes();
 		this.second = date.getSeconds();
-
 		this.init();
 	};
 	Calendar.prototype = {
@@ -27,7 +26,6 @@ $(function() {
 				this.buttons();
 				this.confirm();
 				this.cancel();
-			} else {
 			}
 			if (this.option.time) {
 				this.time();
@@ -60,7 +58,12 @@ $(function() {
 			$(this.element).append(html);
 		},
 		creatHeader: function() {
-			var header = this.year + '-' + (this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1) + '-' + this.day;
+			var header =
+				this.year +
+				'-' +
+				(this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1) +
+				'-' +
+				this.day;
 			$('.calendar-header p').text(header);
 		},
 		creatDates: function() {
@@ -73,7 +76,10 @@ $(function() {
 
 			if (lastMonthWeekDay != 6) {
 				for (var i = 0; i <= lastMonthWeekDay; i++) {
-					dates += '<li><p class="date-default">' + (lastMonthDay - lastMonthWeekDay + i) + '</p></li>';
+					dates +=
+						'<li><p class="date-default">' +
+						(lastMonthDay - lastMonthWeekDay + i) +
+						'</p></li>';
 				}
 			}
 			for (var i = 0; i < currentMonthDay; i++) {
@@ -165,18 +171,35 @@ $(function() {
 				seconds = '';
 			for (var i = 0; i < 12; i++) {
 				if (i == this.hour) {
-					hours += '<li class="active" type="hour" hour="' + i + '">' + (i < 10 ? '0' + i : i) + '</li>';
+					hours +=
+						'<li class="active" type="hour" hour="' +
+						i +
+						'">' +
+						(i < 10 ? '0' + i : i) +
+						'</li>';
 				} else {
 					hours += '<li type="hour" hour="' + i + '">' + (i < 10 ? '0' + i : i) + '</li>';
 				}
 			}
 			for (j = 0; j < 60; j++) {
 				if (j == this.minute) {
-					minutes += '<li class="active" type="minute" minute="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
-					seconds += '<li class="active" type="second" second="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
+					minutes +=
+						'<li class="active" type="minute" minute="' +
+						j +
+						'">' +
+						(j < 10 ? '0' + j : j) +
+						'</li>';
+					seconds +=
+						'<li class="active" type="second" second="' +
+						j +
+						'">' +
+						(j < 10 ? '0' + j : j) +
+						'</li>';
 				} else {
-					minutes += '<li type="minute" minute="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
-					seconds += '<li type="second" second="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
+					minutes +=
+						'<li type="minute" minute="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
+					seconds +=
+						'<li type="second" second="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
 				}
 			}
 			time =
@@ -231,15 +254,28 @@ $(function() {
 		showOnInput: function() {
 			var valueTime = '';
 			if (this.option.time) {
-				valueTime = (this.hour < 10 ? '0' + this.hour : this.hour) + ':' + (this.minute < 10 ? '0' + this.minute : this.minute) + ':' + (this.second < 10 ? '0' + this.second : this.second);
+				valueTime =
+					(this.hour < 10 ? '0' + this.hour : this.hour) +
+					':' +
+					(this.minute < 10 ? '0' + this.minute : this.minute) +
+					':' +
+					(this.second < 10 ? '0' + this.second : this.second);
 			}
 
-			var value = this.year + '-' + (this.month + 1 < 10 ? '0' + (this.month + 1) : this.month) + '-' + (this.day < 10 ? '0' + this.day : this.day) + ' ' + valueTime;
+			var value =
+				this.year +
+				'-' +
+				(this.month + 1 < 10 ? '0' + (this.month + 1) : this.month) +
+				'-' +
+				(this.day < 10 ? '0' + this.day : this.day) +
+				' ' +
+				valueTime;
 
 			this.element.find('input').val(value.trim());
 		},
 		buttons: function() {
-			var buttons = '<button class="calendar-confirm" type="button">确定</button><button class="calendar-cancel" type="button">取消</button>';
+			var buttons =
+				'<button class="calendar-confirm" type="button">确定</button><button class="calendar-cancel" type="button">取消</button>';
 			$('.calendar-button').append(buttons);
 		},
 		confirm: function() {
