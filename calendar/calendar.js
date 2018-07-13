@@ -13,26 +13,15 @@ $(function() {
 	};
 	Calendar.prototype = {
 		init: function() {
-			this.creat();
-			this.creatDates();
-			this.creatHeader();
-			this.clickDates();
-			this.nextMonth();
-			this.preMonth();
-			this.showCalendar();
+			this.creat(); //生成日期
+			this.creatDates(); //生成每个月的天数
+			this.creatHeader(); //生成头部
+			this.clickDates(); //日期点击事件
+			this.nextMonth(); //下个月
+			this.preMonth(); //上个月
+			this.showCalendar(); //展示日期
 			this.showOnInput();
 			this.selectDay();
-			if (this.option.button) {
-				this.buttons();
-				this.confirm();
-				this.cancel();
-			}
-			if (this.option.time) {
-				this.time();
-				this.creatTime();
-				this.showTime();
-				this.timeChoose();
-			}
 		},
 		creat: function() {
 			var weekArr = ['日', '一', '二', '三', '四', '五', '六'];
@@ -58,12 +47,7 @@ $(function() {
 			$(this.element).append(html);
 		},
 		creatHeader: function() {
-			var header =
-				this.year +
-				'-' +
-				(this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1) +
-				'-' +
-				this.day;
+			var header = this.year + '-' + (this.month + 1 < 10 ? '0' + (this.month + 1) : this.month + 1) + '-' + this.day;
 			$('.calendar-header p').text(header);
 		},
 		creatDates: function() {
@@ -76,10 +60,7 @@ $(function() {
 
 			if (lastMonthWeekDay != 6) {
 				for (var i = 0; i <= lastMonthWeekDay; i++) {
-					dates +=
-						'<li><p class="date-default">' +
-						(lastMonthDay - lastMonthWeekDay + i) +
-						'</p></li>';
+					dates += '<li><p class="date-default">' + (lastMonthDay - lastMonthWeekDay + i) + '</p></li>';
 				}
 			}
 			for (var i = 0; i < currentMonthDay; i++) {
@@ -152,152 +133,16 @@ $(function() {
 				$('.calendar').toggle();
 			});
 		},
-		time: function() {
-			$('.time-show').empty();
-			var time =
-				'<p class="time">' +
-				(this.hour < 10 ? '0' + this.hour : this.hour) +
-				':' +
-				(this.minute < 10 ? '0' + this.minute : this.minute) +
-				':' +
-				(this.second < 10 ? '0' + this.second : this.second) +
-				'</p>';
-			$('.time-show').append(time);
-		},
-		creatTime: function() {
-			var time = '',
-				hours = '',
-				minutes = '',
-				seconds = '';
-			for (var i = 0; i < 12; i++) {
-				if (i == this.hour) {
-					hours +=
-						'<li class="active" type="hour" hour="' +
-						i +
-						'">' +
-						(i < 10 ? '0' + i : i) +
-						'</li>';
-				} else {
-					hours += '<li type="hour" hour="' + i + '">' + (i < 10 ? '0' + i : i) + '</li>';
-				}
-			}
-			for (j = 0; j < 60; j++) {
-				if (j == this.minute) {
-					minutes +=
-						'<li class="active" type="minute" minute="' +
-						j +
-						'">' +
-						(j < 10 ? '0' + j : j) +
-						'</li>';
-					seconds +=
-						'<li class="active" type="second" second="' +
-						j +
-						'">' +
-						(j < 10 ? '0' + j : j) +
-						'</li>';
-				} else {
-					minutes +=
-						'<li type="minute" minute="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
-					seconds +=
-						'<li type="second" second="' + j + '">' + (j < 10 ? '0' + j : j) + '</li>';
-				}
-			}
-			time =
-				'<div class="calendar-time">' +
-				'<ul class="time-hour">' +
-				hours +
-				'</ul>' +
-				'<ul class="time-mintes">' +
-				minutes +
-				'</ul>' +
-				'<ul class="time-seconds">' +
-				seconds +
-				'</ul>' +
-				'</div>';
-			$('.clendar-main').append(time);
-		},
-		showTime: function() {
-			this.element.on('click', '.time', function(e) {
-				e.stopPropagation();
-				$('.calendar-time').toggle();
-			});
-			this.element.on('click', '.calendar-time', function(e) {
-				e.stopPropagation();
-			});
-		},
-		timeChoose: function() {
-			var self = this;
-			this.element.on('click', '.calendar-time li', function(e) {
-				e.stopPropagation();
-				$(this)
-					.siblings()
-					.removeClass('active');
-				$(this).addClass('active');
-				var type = $(this).attr('type');
-				switch (type) {
-					case 'hour':
-						self.hour = $(this).attr('hour');
-						break;
-					case 'minute':
-						self.minute = $(this).attr('minute');
-						break;
-					case 'second':
-						self.second = $(this).attr('second');
-						break;
-				}
-				self.time();
-				if (!self.option.button) {
-					self.showOnInput();
-				}
-			});
-		},
-		showOnInput: function() {
-			var valueTime = '';
-			if (this.option.time) {
-				valueTime =
-					(this.hour < 10 ? '0' + this.hour : this.hour) +
-					':' +
-					(this.minute < 10 ? '0' + this.minute : this.minute) +
-					':' +
-					(this.second < 10 ? '0' + this.second : this.second);
-			}
 
-			var value =
-				this.year +
-				'-' +
-				(this.month + 1 < 10 ? '0' + (this.month + 1) : this.month) +
-				'-' +
-				(this.day < 10 ? '0' + this.day : this.day) +
-				' ' +
-				valueTime;
+		showOnInput: function() {
+			var value = this.year + '-' + (this.month + 1 < 10 ? '0' + (this.month + 1) : this.month) + '-' + (this.day < 10 ? '0' + this.day : this.day);
 
 			this.element.find('input').val(value.trim());
-		},
-		buttons: function() {
-			var buttons =
-				'<button class="calendar-confirm" type="button">确定</button><button class="calendar-cancel" type="button">取消</button>';
-			$('.calendar-button').append(buttons);
-		},
-		confirm: function() {
-			var self = this;
-			$('.calendar-confirm').on('click', function() {
-				var value = $('.calendar-header p').text() + ' ' + $('.time').text();
-				self.element.find('input').val(value);
-				$('.calendar').hide();
-			});
-		},
-		cancel: function() {
-			$('.calendar-cancel').on('click', function() {
-				$('.calendar').hide();
-			});
 		}
 	};
 
 	$.fn.calendar = function(option) {
-		var defaultOptions = {
-			button: true,
-			time: true
-		};
+		var defaultOptions = {};
 		new Calendar(this, $.extend(defaultOptions, option));
 	};
 });
