@@ -4,9 +4,35 @@
 	text-align: center;
 	line-height: 45px;
 }
-.table th {
-	background-color: #5c9eb6;
-}
+.table th,
 .table td {
-	background-color: #9cd4e8;
+	border: #ccc 1px solid;
+}
+.checkbox {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border: #ccc 1px solid;
+	vertical-align: middle;
+}
+.checkbox input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+	opacity: 0;
+}
+.checkbox label {
+	display: none;
+	width: 100%;
+	height: 100%;
+	background-color: aqua;
+}
+.checkbox input:checked + label {
+	display: block;
 }
