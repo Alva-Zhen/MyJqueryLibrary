@@ -1,3 +1,7 @@
+* {
+	margin: 0;
+	padding: 0;
+}
 .table {
 	width: 100%;
 	border-collapse: collapse;
@@ -35,4 +39,31 @@
 }
 .checkbox input:checked + label {
 	display: block;
+}
+.page {
+	padding-top: 10px;
+	text-align: right;
+}
+.page input {
+	width: 40px;
+}
+.page > div,
+.page > p {
+	position: relative;
+	display: inline-block;
+	margin-left: 5px;
+	margin-right: 5px;
+	text-align: center;
+	vertical-align: top;
+	cursor: pointer;
+}
+.page > div,
+.page p {
+	min-width: 20px;
+	height: 20px;
+	border: #ccc 1px solid;
+}
+.page > div:hover,
+.page li:hover {
+	background-color: antiquewhite;
 }

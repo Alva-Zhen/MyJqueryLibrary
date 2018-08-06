@@ -3,6 +3,8 @@ function Table(option) {
 	this.THEAD = option.thead;
 	this.TBODY = option.tbody;
 	this.CHECKBOX = option.checkbox;
+	this.PAGENO = option.pageNo;
+	this.PAGEALL = option.pageAll;
 
 	this.init();
 }
@@ -17,6 +19,10 @@ Table.prototype = {
 
 		this.creatThead();
 		this.creatTbody();
+
+		this.creatPage();
+		this.pagePrev();
+
 		if (this.CHECKBOX) {
 			this.creatCheckbox();
 			this.selectCheckbox();
@@ -80,6 +86,39 @@ Table.prototype = {
 				$(this).attr('status', '0');
 			}
 		});
+	},
+	creatPage: function() {
+		$('.page').remove();
+		console.log(1);
+		var page =
+			'<div class="page">' +
+			'<div class="first">首页</div>' +
+			'<div class="prev">上一页</div>' +
+			'<p>' +
+			'<span>' +
+			this.PAGENO +
+			'</span>of' +
+			'<span>' +
+			this.PAGEALL +
+			'</span>' +
+			'</p>' +
+			'<div class="next">下一页</div>' +
+			'<div class="last">末页</div>' +
+			'<input type="text" name="" id="">' +
+			'<p>GO</p>' +
+			'</div>';
+		this.ID.append(page);
+		this.pagePrev();
+	},
+	// 上一页
+	pagePrev: function() {
+		var self = this;
+		$('.prev')
+			.unbind('click')
+			.click(function() {
+				self.PAGENO--;
+				self.creatPage();
+			});
 	}
 };
 
@@ -87,6 +126,8 @@ function table(option) {
 	var _default = {
 		id: '#table',
 		checkbox: true,
+		pageNo: 1,
+		pageAll: 10,
 		thead: ['1', '2', '3'],
 		tbody: function() {
 			return '<tr><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr>';
