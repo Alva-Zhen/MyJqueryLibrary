@@ -1,0 +1,12 @@
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	line-height: 45px;
+}
+.table th {
+	background-color: #5c9eb6;
+}
+.table td {
+	background-color: #9cd4e8;
+}
