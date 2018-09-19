@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商户管理</title>
+</head>
+
+<body>
+    <!-- 菜单条 -->
+    <div class="box">
+        <div class="box-con">
+            <div class="box-header">
+                <p>
+                    <span>商户管理</span>
+                    <span>
+                        <span class="all-counts"></span> Product</span>
+                </p>
+
+                <div class="search-menu search-menu-random">
+                    <div>
+                        <div class="search">
+                            <span>商户名称</span>
+                            <input type="text" id="sell-name">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="search">
+                            <span>商户编码</span>
+                            <input type="text" id="search-code">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="search search-select">
+                            <span>地域</span>
+                            <input type="text" id="search-region">
+                        </div>
+                    </div>
+                    <div>
+                        <button class="inquiry" id="search">查询</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="options">
+                    <img class="options-add" src="./img/Icon-add.png" alt="" title="新增">
+                    <img class="options-delete" src="./img/Icon-delet.png" alt="" title="删除">
+                    <!-- <img src="./img/Icon-checkno.png" alt="" title="新增"> -->
+                </div>
+                <div id="product-table"></div>
+            </div>
+
+            <div class="combo-detail _scroll" id="combo-detail">
+                <div class="combo-detail-con _panel-box"></div>
+            </div>
+
+        </div>
+        <div class="page">
+            <div class="pre"></div>
+            <p>Page
+                <span class="current-page">2</span> of
+                <span class="all-page">3</span>
+                <select>
+                    <option selected="selected">每页显示：10条</option>
+                    <option>每页显示：9条</option>
+                    <option>每页显示：8条</option>
+                    <option>每页显示：7条</option>
+                </select>
+            </p>
+            <div class="next"></div>
+        </div>
+
+    </div>
+
+    <div class="box new-product">
+        <div class="box-header">
+            <p>
+                <span class="pop-header-box">新建商户</span>
+                <span>New Product</span>
+            </p>
+        </div>
+        <div class="box-con" style="border: none;">
+            <div class="options">
+                <img class="box-add" src="./img/Icon-add.png" alt="" title="新增">
+                <img class="box-delete" src="./img/Icon-delet.png" alt="" title="删除">
+            </div>
+            <div class="box-cloumn-2">
+                <div>
+                    <div class="formDiv">
+                        <div>
+                            <label>商户名称：</label>
+                            <input type="text" name="" id="sellerName" maxlength="20">
+                            <p class="tip sellerName-tip">请填写商户名称！</p>
+                        </div>
+                        <div>
+                            <label for="">分成比例：</label>
+                            <input type="text" name="" id="divideRatio">
+                            <p class="tip divideRatio-tip">请选择分成比例！</p>
+                        </div>
+                        <div class="search-select">
+                            <label for="">地区：</label>
+                            <input type="text" name="" id="regionCode">
+                            <p class="tip regionCode-tip">请选择地区！</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <ul class="formDiv product-combo-list">
+                        <!-- <li class="itemDiv">
+                            <div class="choose-product">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="fn" value="">
+                                    <label for="fn"></label>
+                                </div>
+                                <div class="dim-product search-select">
+                                    <span>产品：</span>
+                                    <input type="text" class="dim-input default-select" id="production">
+                                </div>
+                                <div class="combo">
+                                    <div class="dropdwon" id="drop">
+                                        <div class="dropdwon-header default-select">请选择套餐</div>
+                                        <ul></ul>
+                                    </div>
+                                </div>
+                                <div class="code-wrap">
+                                    <input type="text" class="package-input" placeholder="产品转换代码">
+                                </div>
+                            </div>
+                            <div class="had-choose">
+                                <div>
+                                    <p><img src="./img/remove-product.png" alt="" srcset="">套餐A</p>
+                                    <input type="text" class="package-input" placeholder="套餐转换代码">
+                                </div>
+                            </div>
+                        </li> -->
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="btn-connected ">
+            <button class="save-btn"></button>
+            <button class="cancel-btn"></button>
+        </div>
+    </div>
+
+
+    <script src="./js/productTree.js"></script>
+    <script src="./js/drop.js"></script>
+    <script>
+        $(function () {
+
+
+
+            // 页面初始化获取产品和套餐
+            var productLists = [];
+            var comboLists = []
+            ajaxAPI('../common/listSellerProduct', {}, function (res) {
+                productLists = res.data.product;
+                comboLists = res.data.combo;
+            }, false);
+
+
+            creatTable();
+
+            /* 区域模糊搜索 */
+            $.selectSuggest('regionCode', createAreas());
+            $.selectSuggest('search-region', createAreas());
+
+            // 新增按钮点击事件
+            var addNum = 0;
+            $('.box-add').click(function () {
+                var item = '<li class="itemDiv">' +
+                    '<div class="choose-product">' +
+                    '<div class="checkbox">' +
+                    '<input type="checkbox" id="fn' + addNum + '" value="">' +
+                    '<label for="fn' + addNum + '"></label>' +
+                    '</div>' +
+                    '<div class="dim-product search-select">' +
+                    '<span>产品：</span>' +
+                    '<input type="text" class="dim-input default-select" id="product' + addNum + '">' +
+                    '</div>' +
+                    '<div class="combo">' +
+                    '<div class="dropdwon" id="drop' + addNum + '">' +
+                    '<div class="dropdwon-header default-select">请选择套餐</div>' +
+                    '<ul></ul>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="code-wrap">' +
+                    '<input type="text" class="package-input" placeholder="产品转换代码">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="had-choose"></div>' +
+                    '</li>'
+                $('.product-combo-list').append(item);
+                createProduct(addNum);
+                addNum++;
+            });
+            // 新建-产品部分
+            // 获取产品
+            var selectedProducts = {}
+            function createProduct(num) {
+                $.selectSuggest('product' + num, productLists, '', function (id, value, self) {
+                    var parent = self.parents('.itemDiv');
+                    var hasSelectedId = parent.attr('product');
+                    if (hasSelectedId) {
+                        if (selectedProducts.hasOwnProperty(hasSelectedId)) {
+                            delete selectedProducts[hasSelectedId]
+                        }
+                        selectCombos()
+                    } else {
+                        if (selectedProducts.hasOwnProperty(id)) {
+                            showTip('您选择得产品已存在！请选择其他产品！')
+                        } else {
+                            selectCombos()
+                        }
+                    }
+                    function selectCombos() {
+                        parent.attr('product', id)
+                        parent.find('.had-choose').empty();
+                        selectedProducts[id] = [];
+                        dropdwon({
+                            id: '#drop' + num,
+                            data: comboLists[id],
+                            itemChoose: true,//开启选项点击回调
+                            itemChooseFn: function (self) {
+                                var comboId = self.attr('value');
+                                var index = selectedProducts[id].indexOf(comboId);
+                                if (index == -1) {
+                                    selectedProducts[id].push(comboId);
+                                    var select = '<div class="select-combo" comboId="' + comboId + '">' +
+                                        '<p><img class="remove-combo" src="./img/remove-product.png" alt="">' + self.text() + '</p>' +
+                                        '<input type="text" class="package-input" placeholder="套餐转换代码">' +
+                                        '</div>';
+                                    var parents = self.parents('li');
+                                    parents.find('.had-choose').append(select);
+
+
+                                    // 移除套餐
+                                    $('.remove-combo').click(function () {
+                                        var parents = $(this).parents('.select-combo');
+                                        selectedProducts[id].splice(selectedProducts[id].indexOf(parents.attr('comboId'), 1));
+                                        parents.remove()
+                                    })
+
+                                } else {
+                                    showTip('不可以重复添加套餐！')
+                                }
+                            }
+                        });
+                    }
+
+
+                });
+            }
+
+
+            // 删除新增产品套餐
+            $('.box-delete').click(function () {
+                $('.choose-product').find('input:checked').parents('.itemDiv').remove()
+            })
+            /* 查询 */
+            $('#search').click(function () {
+                var sellerName = $('#sell-name').val();
+                creatTable({
+                    'sellerName': sellerName, //商户名称
+                });
+            });
+
+
+            //产品查询
+            $('#search-product-tree').click(function () {
+                var productName = $('#search-product-tree-input').val();
+                creatProductTree({
+                    'productName': encodeURI(productName),
+                    'sellerCode': $('#search-code').val(),
+                    'regionCode': $('#search-region').attr('selectid'),
+                })
+            })
+
+
+            /* 新增 */
+            $('.options-add').click(function () {
+                showPop();
+                $('.formDiv input[type="text"]').val('');
+                $('.pop-header-box').text('新建商户');
+                $('.save-btn').text('新建商户');
+                $('.cancel-btn').text('取消新建');
+                $('.save-btn').attr('type', 'add')
+            })
+
+            /* 保存新增/修改 */
+            $('.save-btn').click(function () {
+                var regionCode = $('#regionCode').attr('selectid');
+                var sellerName = $('#sellerName').val();
+                var divideRatio = $('#divideRatio').val();
+
+                var productIds = [];//产品ID
+                var comboIds = [];//套餐ID
+
+                var notEmpty = isEmpty({
+                    'regionCode': regionCode,
+                    'sellerName': sellerName,
+                    'divideRatio': divideRatio,
+                })
+
+                // 判断套餐转换代码是否重复
+                var itemDiv = $('.itemDiv');
+                var selectProductCode = [];//用于判断产品转换代码是否重复
+                var productTransCode = []//用于判断产品转换代码传参
+                var comboTransCode = [];//用于判断套餐转换代码传参
+
+                for (var i = 0; i < itemDiv.length; i++) {
+                    var selectCombo = $(itemDiv[i]).find('.select-combo');
+                    var productCode = $(itemDiv[i]).find('.code-wrap input').val();
+                    selectProductCode.push(productCode)
+                    var selectComboCode = [];//用于判断套餐转换代码是否重复
+                    for (var j = 0; j < selectCombo.length; j++) {
+                        var value = $(selectCombo[j]).find('input').val();
+                        comboTransCode.push(value);
+                        productTransCode.push(productCode);
+                        productIds.push($(itemDiv[i]).attr('product'));
+                        comboIds.push($(selectCombo[j]).attr('comboid'));
+
+                        if (value != '') {
+                            selectComboCode.push(value)
+                        }
+                    }
+                    if (!isArrayRepetition(selectComboCode)) {
+                        showTip('套餐转换代码不可重复！')
+                    }
+                }
+
+                if (!isArrayRepetition(selectProductCode)) {
+                    showTip('产品转换代码不可重复！')
+                }
+
+
+                if (notEmpty) {
+                    var url = '';
+                    var type = $(this).attr('type');
+                    if (type == 'add') {
+                        url = '../system/seller/save';
+                        var data = {
+                            'sellerName': sellerName,
+                            'divideRatio': divideRatio,
+                            'regionCode': regionCode,
+                            'productIds': productIds.toString(),
+                            'comboIds': comboIds.toString(),
+                            'comboTransCodes': comboTransCode.toString(),
+                            'productTransCodes': productTransCode.toString(),
+                        }
+                    } else {
+                        url = '../system/seller/update';
+                        var data = {
+                            'sellerId': $('.checkbox-single input:checked').parents('tr').attr('sellerId'),
+                            'regionCode': regionCode,
+                            'sellerName': sellerName,
+                            'divideRatio': divideRatio,
+                            'productIds': productIds.toString(),
+                            'comboIds': combosIds.toString()
+                        }
+                    }
+                    ajaxPostAPI(url, data, function (res) {
+                        if (res.success) {
+                            creatTable();
+                            hidePop()
+                        }
+                    })
+                }
+            });
+
+
+            $('.cancel-btn').click(function () {
+                hidePop()
+            })
+
+
+            // 删除商户
+            $('.options-delete').click(function () {
+                var ids = [];
+                var len = $('.checkbox-single input:checked').length;
+                if (len > 0) {
+                    for (var i = 0; i < len; i++) {
+                        var id = $($('.checkbox-single input:checked')[i]).parents('tr').attr('id');
+                        ids.push(id)
+                    }
+                    ajaxPostAPI('../system/seller/delete', {
+                        'ids': ids.toString(),
+                    }, function (data) {
+                        if (data.success) {
+                            creatTable();
+                            showTip('删除成功！')
+                        }
+                    })
+                } else {
+                    showTip('请选择要删除的商户！')
+                }
+            });
+
+
+
+
+
+            /* ----------------------------------------- */
+            // 判断数组是否有重复
+            function isArrayRepetition(arr) {
+                var obj = {}
+                var arr1 = []
+                for (var i = 0; i < arr.length; i++) {
+                    if (!obj.hasOwnProperty(arr[i])) {
+                        obj[arr[i]] = '';
+                        arr1.push(arr[i])
+                    }
+                }
+                if (arr.length == arr1.length) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+
+            function creatTable(data) {
+                var ajaxData = data ? data : {}
+
+                ajaxAPI('../system/seller/list', ajaxData, function (res) {
+                    comboList = []
+                    var data = res.data.result;
+                    $('.page span:nth-child(1)').text(res.data.pageNo);
+                    $('.page span:nth-child(2)').text(res.data.totalPages);
+                    $('.all-counts').text(res.data.totalCount)
+                    table({
+                        id: '#product-table',
+                        thead: ['商户名称', '商户编码', '商户号', '分成比例', '地区', '创建日期', '操作'],
+                        tbody: function () {
+                            var tds = '';
+                            for (var i = 0; i < data.length; i++) {
+                                tds +=
+                                    '<tr id="' + data[i].sellerId + '" deleteFlag="' + data[i].deleteFlag + '">' +
+                                    '<td class="sellerName">' + data[i].sellerName + (data[i].deleteFlag == 0 ? '(已删除)' : '') + '</td>' +
+                                    '<td class="sellerCode">' + data[i].sellerCode + '</td>' +
+                                    '<td class="sellerKey">' + data[i].sellerKey + '</td>' +
+                                    '<td class="divideRatio">' + (data[i].divideRatio == null ? '' : data[i].divideRatio) + '</td>' +
+                                    '<td class="regionCode" regionCode="' + data[i].regionCode + '">' + data[i].regionName + '</td>' +
+                                    '<td class="endTime">' + transitionDate(data[i].createDate) + '</td > ' +
+                                    '<td class="deleteFlag" style="display:none;">' + data[i].deleteFlag + '</td > ' +
+                                    '<td>' +
+                                    '<img class="options-detail" src="./img/693384576862404088.png" alt="" title="明细">' +
+                                    ' <img class="options-edit" sellerId="' + data[i].sellerId + '" src="./img/Icon-edit.png" alt="" title="编辑">' +
+                                    ' <img class="options-recover" src="./img/recover.png" alt="" title="恢复">' +
+                                    '</td>' +
+                                    '</tr>';
+                                comboList.push(data[i].comboList)
+                            }
+                            return tds;
+                        }
+                    });
+                    $('.deleteFlag').each(function () {
+                        if ($(this).text() == "1") {
+                            $(this).parent('tr').find('td .options-edit').show();
+                            $(this).parent('tr').find('td .options-recover').hide();
+                        } else {
+                            $(this).parent('tr').find('.options-edit').hide();
+                            $(this).parent('tr').find('td .options-recover').show();
+                        }
+                    });
+                    // 详情
+                    $('.options-detail').click(function (e) {
+                        e.stopPropagation();
+                        var comboIndex = $(this).attr('combo')
+                        creatCombo(comboList[comboIndex])
+                    });
+                    //商户修改
+                    $('.options-edit').click(function () {
+                        $('.pop-header-box').text('修改商户');
+                        $('.save-btn').text('修改商户');
+                        $('.cancel-btn').text('取消修改');
+                        $('.save-btn').attr('type', 'edit');
+                        ajaxAPI('../system/seller/edit', { sellerId: $(this).attr('sellerId') }, function (res) {
+                            var data = res.data;
+                            $('#sellerName').val(data.seller.sellerName);
+                            $('#divideRatio').val(data.seller.divideRatio);
+                            $('#regionCode').attr('regionCode', data.seller.regionCode);
+                            showPop();
+                        })
+
+                    })
+                    // 商户恢复
+                    $('.options-recover').click(function () {
+                        var ids = new Array();
+                        var id = $(this).parents('tr').attr('id');
+                        ids.push(id)
+                        ajaxPostAPI('../system/seller/recover', {
+                            'ids': ids.toString(),
+                        }, function (data) {
+                            if (data.success) {
+                                creatTable();
+                                showTip('恢复成功！')
+                            }
+                        })
+
+                    });
+
+                }, false)
+
+            };
+            function creatCombo(data) {
+                $('#combo-detail > .combo-detail-con').empty();
+                $('.combo-detail').addClass('show-detail');
+                var tds = '';
+                for (var i = 0; i < data.length; i++) {
+                    tds +=
+                        '<div class="combo ">' +
+
+                        '</div>';
+                }
+                $('#combo-detail > .combo-detail-con').append(tds)
+            }
+
+            //展示展品
+            function creatProductTree(data, id) {
+                ajaxAPI('../common/listSellerProduct', data, function (res) {
+                    productTree({
+                        id: '.product-tree',
+                        data: res.data,
+                        select: function (self) {
+                            var parent = self.parents('.item-header');
+                            var type = parent.attr('type');
+                            if (type == 'pro') {
+                                var productID = parent.attr('id');
+                                var next = parent.siblings('.next').find('.item');
+                                for (var i = 0; i < next.length; i++) {
+                                    var comboID = $(next).find('.item-header').attr('id');
+                                    var index = combosIds.indexOf(comboID)
+                                    if (index == -1) {
+                                        combosIds.push(comboID);
+                                        productIds.push(productID)
+                                    } else {
+                                        combosIds.splice(index, 1)
+                                        productIds.splice(index, 1)
+                                    }
+                                }
+                            } else {//点击得不是产品时
+                                var comboID = parent.attr('id');
+                                var productID = self.parents('.next').siblings('.item-header').attr('id');
+                                var index = combosIds.indexOf(comboID)
+                                if (index == -1) {
+                                    combosIds.push(comboID);
+                                    productIds.push(productID)
+                                } else {
+                                    combosIds.splice(index, 1)
+                                    productIds.splice(index, 1)
+                                }
+                            }
+                        }
+                    })
+
+                    detail(id)
+                }, false)
+            }
+
+            function detail(sellerId) {
+                ajaxAPI('../system/seller/edit', { 'sellerId': sellerId }, function (res) {
+                    var sellerProduct = res.data.sellerProduct;
+                    for (var i = 0; i < sellerProduct.length; i++) {
+                        $('.tree-checkbox[parentid="' + sellerProduct[i].comboId + '"]').attr('status', '1').find('.select').show();
+                        $('.tree-checkbox[parentid="' + sellerProduct[i].productId + '"]').attr('status', '1').find('.select').show();
+
+                        productIds.push(sellerProduct[i].comboId)
+                        combosIds.push(sellerProduct[i].productId)
+                    }
+
+                }, false)
+            }
+            /* -------------------------------------- */
+
+        })
+    </script>
+
+</body>
+
+</html>
