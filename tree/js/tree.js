@@ -1,24 +1,18 @@
-var treeData = [
-	{
-		resourceId: 1,
-		resourceName: '1',
+var treeData = [{
+	resourceId: 1,
+	resourceName: '1',
+	labelRemark: '1',
+	resources: [{
+		resourceId: 2,
+		resourceName: '2',
 		labelRemark: '1',
-		resources: [
-			{
-				resourceId: 2,
-				resourceName: '2',
-				labelRemark: '1',
-				resources: [
-					{
-						resourceId: 3,
-						resourceName: '3',
-						labelRemark: '1'
-					}
-				]
-			}
-		]
-	}
-];
+		resources: [{
+			resourceId: 3,
+			resourceName: '3',
+			labelRemark: '1'
+		}]
+	}]
+}];
 
 function LabelTree(options) {
 	this.id = options.id;
@@ -33,7 +27,7 @@ function LabelTree(options) {
 }
 
 LabelTree.prototype = {
-	init: function() {
+	init: function () {
 		this.createItem();
 		this.itemState();
 		this.itemAdd();
@@ -43,44 +37,44 @@ LabelTree.prototype = {
 			this.itemClick();
 		}
 	},
-	createItem: function() {
+	createItem: function () {
 		$(this.id).empty();
 		var item = '';
 		for (var i = 0; i < this.data.length; i++) {
 			item +=
 				'<div class="item">' +
-				'<div class="item-header" id="' + this.data[i].resourceId + '"  pidid="' + this.data[i].resourcePid + '" resourceUrl="' + this.data[i].resourceUrl + '" iconUrl="'+ this.data[i].iconUrl +'" orderOn="'+ this.data[i].orderOn +'" status="'+ this.data[i].status +'" resourceType="'+ this.data[i].resourceType +'">' +
+				'<div class="item-header" id="' + this.data[i].resourceId + '"  pidid="' + this.data[i].resourcePid + '" resourceUrl="' + this.data[i].resourceUrl + '" iconUrl="' + this.data[i].iconUrl + '" orderOn="' + this.data[i].orderOn + '" status="' + this.data[i].status + '" resourceType="' + this.data[i].resourceType + '">' +
 				(this.data[i].resources && this.data[i].resources.length > 0 ? '<span state="' + this.state + '" class="item-state ' + (this.state ? 'item-open' : 'item-close') + '"></span>' : '') +
 				'<p clickType="0">' +
 				this.data[i].resourceName +
 				'</p>' +
 				/*(this.oprations ? this.addOprations() : '') +*/
 				'</div>' +
-				(this.data[i].resources && this.data[i].resources.length > 0 ? this.next(this.data[i].resourceId, this.data[i].resources,this.data[i].resourceName) : '') +
+				(this.data[i].resources && this.data[i].resources.length > 0 ? this.next(this.data[i].resourceId, this.data[i].resources, this.data[i].resourceName) : '') +
 				'</div>';
 		}
 		$(this.id).append(item);
 	},
-	next: function(parentId, data,parentName) {
+	next: function (parentId, data, parentName) {
 		var item = '';
 		for (var i = 0; i < data.length; i++) {
 			item +=
 				'<div class="item">' +
-				'<div class="item-header" id="' + data[i].resourceId + '" pidid="' + data[i].resourcePid + '" resourceUrl="' + data[i].resourceUrl + '" iconUrl="'+ data[i].iconUrl +'" orderOn="'+ data[i].orderOn +'" status="'+ data[i].status +'" resourceType="'+ data[i].resourceType +'" parentName="'+ parentName +'">' +
+				'<div class="item-header" id="' + data[i].resourceId + '" pidid="' + data[i].resourcePid + '" resourceUrl="' + data[i].resourceUrl + '" iconUrl="' + data[i].iconUrl + '" orderOn="' + data[i].orderOn + '" status="' + data[i].status + '" resourceType="' + data[i].resourceType + '" parentName="' + parentName + '">' +
 				(data[i].resources && data[i].resources.length > 0 ? '<span state="' + this.state + '" class="item-state ' + (this.state ? 'item-open' : 'item-close') + '"></span>' : '') +
 				'<p clickType="0">' +
 				data[i].resourceName +
 				'</p>' +
 				(this.oprations ? this.addOprations() : '') +
 				'</div>' +
-				(data[i].resources && data[i].resources.length > 0 ? this.next(data[i].resourceId, data[i].resources,data[i].resourceName) : '') +
+				(data[i].resources && data[i].resources.length > 0 ? this.next(data[i].resourceId, data[i].resources, data[i].resourceName) : '') +
 				'</div>';
 		}
 		return '<div class="next" parentId="' + parentId + '" style="display: ' + (this.state ? 'block' : 'none') + '">' + item + '</div>';
 	},
-	itemState: function() {
+	itemState: function () {
 		// $('.item-state')状态：0:close;1:open
-		$('.item-state').on('click', function() {
+		$('.item-state').on('click', function () {
 			var state = $(this).attr('state');
 			var parentId = $(this)
 				.parent('.item-header')
@@ -100,43 +94,43 @@ LabelTree.prototype = {
 			}
 		});
 	},
-	itemAdd: function() {
+	itemAdd: function () {
 		var self = this;
-		$('.item-add').on('click', function() {
+		$('.item-add').on('click', function () {
 			self.add($(this));
 		});
 	},
-	itemRemove: function() {
+	itemRemove: function () {
 		var self = this;
-		$('.item-remove').on('click', function() {
+		$('.item-remove').on('click', function () {
 			self.remove($(this));
 		});
 	},
-	itemEdit: function() {
+	itemEdit: function () {
 		var self = this;
-		$('.item-edit').on('click', function() {
+		$('.item-edit').on('click', function () {
 			self.edit($(this));
 		});
 	},
-	itemClick: function() {
-		$('.item-header > p').click(function() {
-			var clickType=$(this).attr('clickType');
+	itemClick: function () {
+		$('.item-header > p').click(function () {
+			var clickType = $(this).attr('clickType');
 			var parent = $(this).parent('.item-header');
-			if(clickType=='0'){
+			if (clickType == '0') {
 				$(parent).addClass('active');
-				$(this).attr('clickType','1')
-			}else{
+				$(this).attr('clickType', '1')
+			} else {
 				$(parent).removeClass('active');
-				$(this).attr('clickType','0')
+				$(this).attr('clickType', '0')
 			}
 		});
 	},
-	addOprations: function() {
-		return '<div class="item-opration">' + 
-				'<span class="item-add"><img src="./img/Icon-menu-add.png" alt=""></span>' +
-				'<span class="item-remove"><img src="./img/Icon-menu-delete.png" alt=""></span>' + 
-				'<span class="item-edit"><img src="./img/Icon-menu-edit.png" alt=""></span>' + 
-				'</div>';
+	addOprations: function () {
+		return '<div class="item-opration">' +
+			'<span class="item-add"><img src="./img/add.png" alt=""></span>' +
+			'<span class="item-remove"><img src="./img/remove.png" alt=""></span>' +
+			'<span class="item-edit"><img src="./img/edit.png" alt=""></span>' +
+			'</div>';
 	}
 };
 
@@ -146,14 +140,14 @@ function tree(options) {
 		data: treeData,
 		state: 1, //初始状态，下级是打开还是收起：0:close;1:open,
 		multiSelect: false,
-		oprations: false,
-		add: function(self) {
+		oprations: true, //是否需要操作按钮
+		add: function (self) {
 			console.log('add');
 		},
-		remove: function(self) {
+		remove: function (self) {
 			console.log('remove');
 		},
-		edit: function(self) {
+		edit: function (self) {
 			console.log('edit');
 		}
 	};
