@@ -1,0 +1,49 @@
+div,
+p,
+input,
+ul {
+	margin: 0;
+	padding: 0;
+}
+li {
+	list-style: none;
+}
+
+.fuzzy-search {
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+.fuzzy-search p {
+	min-height: 30px;
+	border: #ccc 1px solid;
+}
+.fuzzy-search p span {
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+}
+.fuzzy-con {
+	display: none;
+	position: absolute;
+	width: 100%;
+	border: #ccc 1px solid;
+}
+.fuzzy-con input {
+	width: 100%;
+}
+.fuzzy-con li {
+	line-height: 30px;
+	cursor: pointer;
+}
+.fuzzy-con li.active {
+	background-color: antiquewhite;
+}
+.remove-selected {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 10px;
+	height: 10px;
+	background-color: antiquewhite;
+}

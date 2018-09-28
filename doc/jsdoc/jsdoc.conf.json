@@ -1,0 +1,53 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "source": {
+    "include": [
+      "app/public/js",
+      "app/component/common/public"
+    ],
+    "exclude": [
+    ],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "logoFile": "",
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "dateFormat": "ddd MMM Do YYYY",
+    "outputSourceFiles": true,
+    "outputSourcePath": true,
+    "systemName": "品推宝",
+    "footer": "",
+    "copyright": "品推宝WEB前端JS/JSX文档说明",
+    "navType": "vertical",
+    "theme": "cerulean",
+    "linenums": true,
+    "collapseSymbols": false,
+    "inverseNav": true,
+    "protocol": "html://",
+    "methodHeadingReturns": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "recurse": true,
+    "destination": "doc/jsdoc/out"
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true,
+    "tags": [
+      "foo",
+      "bar"
+    ]
+  }
+}

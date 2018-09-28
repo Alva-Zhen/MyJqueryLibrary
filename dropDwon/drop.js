@@ -1,4 +1,5 @@
 function Dropdwon(option) {
+	this.NAME = option.id.split('#')[1];
 	this.ID = $(option.id);
 	this.DATA = option.data;
 	this.ITEMCHOOSE = option.itemChoose;
@@ -8,15 +9,16 @@ function Dropdwon(option) {
 }
 Dropdwon.prototype = {
 	init: function() {
-		this.creat();
+		// this.creat();
 		this.creatItem();
 		this.showOptions();
+		this.position();
 
 		// 是否多选
 		this.MULTI ? this.multiChoose() : this.itemChoose();
 	},
 	creat: function() {
-		var str = '<div class="dropdwon"><div class="dropdwon-header"></div><ul></ul></div>';
+		var str = '<div class="dropdwon"><div class="dropdwon-header"></div></div>';
 		this.ID.append(str);
 		this.HEADER = this.ID.find('.dropdwon-header');
 	},
@@ -25,10 +27,12 @@ Dropdwon.prototype = {
 		for (var i = 0; i < this.DATA.length; i++) {
 			li += '<li value="' + this.DATA[i].id + '">' + this.DATA[i].value + '</li>';
 		}
-		this.ID.find('ul').append(li);
+		$('body').append('<ul id="' + this.NAME + '-ul">' + li + '</ul>');
+		// this.ID.find('ul').append(li);
 	},
 	itemChoose: function() {
 		var _this = this;
+		var showContent = $('#' + this.NAME + '-ul');
 		this.ID.on('click', 'li', function() {
 			if (_this.ITEMCHOOSE) {
 				_this.ITEMCHOOSEFN($(this));
@@ -37,13 +41,14 @@ Dropdwon.prototype = {
 				_this.HEADER.text(text);
 				_this.ITEMCHOOSEFN($(this));
 			}
-			_this.ID.find('ul').hide();
+			showContent.hide();
 		});
 	},
 	multiChoose: function() {
 		var multiChoose = [];
 		var _this = this;
-		this.ID.find('li').click(function() {
+		var showContent = $('#' + this.NAME + '-ul');
+		showContent.find('li').click(function() {
 			var value = $(this).attr('value');
 			var index = multiChoose.indexOf(value);
 			if (index == -1) {
@@ -65,9 +70,21 @@ Dropdwon.prototype = {
 		this.ID.find('.dropdwon-header span[value="' + value + '"]').remove();
 	},
 	showOptions: function() {
-		var _this = this;
+		var showContent = $('#' + this.NAME + '-ul');
 		this.ID.find('.dropdwon-header').click(function() {
-			_this.ID.find('ul').toggle();
+			showContent.toggle();
+		});
+	},
+	position: function() {
+		var position = this.ID.offset();
+		var width = this.ID[0].offsetWidth;
+		var height = this.ID[0].offsetHeight;
+		$('#' + this.NAME + '-ul').css({
+			top: position.top + Number(height) + 'px',
+			left: position.left + 'px',
+			width: width,
+			position: 'absolute',
+			zIndex: ' 1'
 		});
 	}
 };

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div id="fuzzy-search" style="width:200px"></div>
+    <input type="text" id="input">
+    <!-- <div class="fuzzy-search">
+        <p>header</p>
+        <div class="fuzzy-con">
+            <input type="text" name="" id="">
+            <ul>
+                <li>111</li>
+                <li>222</li>
+                <li>333</li>
+                <li>444</li>
+                <li>555</li>
+            </ul>
+        </div>
+    </div> -->
+    <script src="./jquery-1.10.2.min.js"></script>
+    <script src="./a.js"></script>
+    <script src="./jquery.select.js"></script>
+    <script>
+        $(function () {
+            fuzzy();
+            var data = [
+                {
+                    id: 1,
+                    value: 11111111
+                },
+                {
+                    id: 2,
+                    value: 122222
+                },
+                {
+                    id: 3,
+                    value: 123333
+                },
+                {
+                    id: 4,
+                    value: 44444444
+                }
+            ]
+            $.selectSuggest('input', data)
+        })
+    </script>
+</body>
+
+</html>

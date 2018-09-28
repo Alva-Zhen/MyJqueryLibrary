@@ -1,0 +1,49 @@
+## 文件组织
+    ptb-web 工程目录
+        --app 主目录
+            |--component 组件目录
+                |--common 所有页面公共部分
+                |--demo 示例目录
+                |--financial 金融目录
+                |--index 首页
+                |--loginReg 登录注册
+                |--shop 交易目录
+                    |--demand 需求大厅
+                    |--service 服务大厅
+                    |--supplier 服务商库
+                |--static 静态文件   
+                |--user 用户中心
+                    |--buyer 买家中心
+                    |--seller 卖家中心
+                    |--common 用户中心公共部分
+                    |--account 账户设置
+            |---public 公共目录
+                |--css  样式
+                |--file 文件下载
+                |--img  图片
+                |--js   公共js方法
+                |--plugin   插件
+                |-versionTips 版本提示
+        --backup 生产:备份目录RAR(自动生成)
+        --build 构建目录(自动生成)
+        --config
+            |-common 公共方法
+            |-entry entry处理目录
+            |-webpack webpack 配置目录
+        --entryBuild node 自动生成 头部底部 供webpack 入口文件使用
+        --node_modules 包目录(自动生成)
+        --doc 工程使用说明
+            |--cssdoc 样式文档生成
+            |--gitbook 教程文档生成
+            |--jsdoc js注解文档生成
+        --pc 发布上线目录(自动生成)
+        .babelrc babel配置文件
+        .eslintignore eslint配置文件
+        .gitignore git排除目录
+        buildTime.md 每次上线描述
+        file.md 工程目录说明
+        gulpfile.js gulp配置文件
+        index.html 模版文件
+        package.json 包管理文件
+        postcss.config.js postcss配置文件
+        README.md 说明文档
